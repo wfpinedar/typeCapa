@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/tipeData" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
