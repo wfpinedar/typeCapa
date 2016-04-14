@@ -171,12 +171,28 @@ class tipeData:
             parent=self.iface.mainWindow())
 
     def typeShape(self):
-        aLyr = self.map.currentLayer()
-        bLyr = self.iface.activeLayer()
-        extent = bLyr.extent()
-        self.map.setExtent(extent)
-        QMessageBox.critical(self.dlg, "Capa Seleccionada :)",
-                "La Capa Selecciondada es de tipo" + str(type(aLyr)))
+        try:
+            aLyr = self.map.currentLayer()
+            if aLyr.type() == 0:
+                QMessageBox.information(self.dlg, "Capa Seleccionada :)",
+                "La capa selecciondada es: \n" + str(aLyr.name())
+                 + "\n y es de tipo VECTOR")
+                bLyr = self.iface.activeLayer()
+                extent = bLyr.extent()
+                self.map.setExtent(extent)
+                self.map.refresh()
+            elif aLyr.type() == 1:
+                QMessageBox.information(self.dlg, "Capa Seleccionada :)",
+                "La capa selecciondada es: \n" + str(aLyr.name())
+                 + "\n y es de tipo RASTER")
+                bLyr = self.iface.activeLayer()
+                extent = bLyr.extent()
+                self.map.setExtent(extent)
+                self.map.refresh()
+        except AttributeError:
+            QMessageBox.critical(self.dlg, "Capa Seleccionada :)",
+                "No se ha seleccionado ninguna capa. :(")
+            raise
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
