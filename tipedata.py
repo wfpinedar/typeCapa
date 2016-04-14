@@ -21,7 +21,9 @@
  ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtGui import QAction, QIcon, QMessageBox
+from qgis.core import QgsGeometry
+from qgis.gui import *
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
@@ -42,6 +44,8 @@ class tipeData:
         """
         # Save reference to the QGIS interface
         self.iface = iface
+        #instancia el objeto map de QGIS
+        self.map = self.iface.mapCanvas()
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
@@ -82,7 +86,6 @@ class tipeData:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('tipeData', message)
-
 
     def add_action(
         self,
@@ -167,6 +170,13 @@ class tipeData:
             callback=self.run,
             parent=self.iface.mainWindow())
 
+    def typeShape(self):
+        aLyr = self.map.currentLayer()
+        bLyr = self.iface.activeLayer()
+        extent = bLyr.extent()
+        self.map.setExtent(extent)
+        QMessageBox.critical(self.dlg, "Capa Seleccionada :)",
+                "La Capa Selecciondada es de tipo" + str(type(aLyr)))
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -178,15 +188,15 @@ class tipeData:
         # remove the toolbar
         del self.toolbar
 
-
     def run(self):
         """Run method that performs all the real work"""
+        self.typeShape()
         # show the dialog
-        self.dlg.show()
+#        self.dlg.show()
         # Run the dialog event loop
-        result = self.dlg.exec_()
+#        result = self.dlg.exec_()
         # See if OK was pressed
-        if result:
+        #if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            pass
+        #    pass
